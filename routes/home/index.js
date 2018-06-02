@@ -3,6 +3,12 @@ const router = express.Router();
 
 
 
+router.all('/*', (req, res, next)=>{
+    req.app.locals.layout = 'home';
+    next();
+});
+
+//these are going into views/home/*.handlebars
 router.get('/', (req, res) => {
     res.render('home/index');
 });
