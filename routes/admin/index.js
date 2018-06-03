@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const Post = require('../../models/Posts');
+const faker = require('faker');
 
 
 //override default layout set in app.js i.e. the home layout
@@ -15,9 +17,26 @@ router.get('/', (req, res) => {
     res.render('admin/index');
 });
 
-//this is going into views/admin/dashboard.handlebars
-router.get('/dashboard', (req, res) => {
-    res.render('admin/dashboard');
+//TEMPARARY ROUTE to generate fake data for testing
+router.post('/generate-fake-posts', (req, res) => {
+    
+    // res.send('itworks');
+    for(let i = 0; i < req.body.amount; i++){
+
+        let post = new Post();
+
+        post.title = faker.random.word();
+        post.status = 'public';
+        post.allowComments = faker.random.boolean();
+        post.body = faker.lorem.paragraph();
+
+        post.save().then(newPost => {
+        });
+    }
+
+    res.redirect('/admin/posts');
+
 });
+
 
 module.exports = router;
