@@ -5,7 +5,7 @@ const exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
-
+const upload = require('express-fileupload');
 
 
 /**** Database stuff ****/
@@ -15,7 +15,7 @@ mongoose.connect('mongodb://127.0.0.1/cms').then( db => {
 }).catch(err => console.log('could not connect to DB: ', err));
 
 
-//serve static files ie css.
+//serve static files i.e. css.
 app.use(express.static(path.join(__dirname, 'public')));
 
 //helper functions for handlebars
@@ -25,6 +25,9 @@ const {select} = require('./helpers/handlebars-helpers');
 app.engine('handlebars', exphbs({defaultLayout: 'home', helpers: {select: select}}));
 app.set('view engine', 'handlebars');
 
+
+//file upload middleware
+app.use(upload());
 
 //body-parse middleware
 app.use(bodyParser.urlencoded({extended: true}));
