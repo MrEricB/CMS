@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const upload = require('express-fileupload');
+const session = require('express-session');
+const flash = require('connect-flash');
 
 
 /**** Database stuff ****/
@@ -19,10 +21,10 @@ mongoose.connect('mongodb://127.0.0.1/cms').then( db => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 //helper functions for handlebars
-const {select} = require('./helpers/handlebars-helpers');
+const {select, generateDate} = require('./helpers/handlebars-helpers');
 
 //set view engine 'handlebars'
-app.engine('handlebars', exphbs({defaultLayout: 'home', helpers: {select: select}}));
+app.engine('handlebars', exphbs({defaultLayout: 'home', helpers: {select: select, generateDate: generateDate}}));
 app.set('view engine', 'handlebars');
 
 
@@ -35,6 +37,23 @@ app.use(bodyParser.json());
 
 //midware to use method verbs
 app.use(methodOverride('_method'));
+
+
+//session middleware
+app.use(session({
+    secret: 'eric123abc',
+    resave: true,
+    saveUninitialized: true
+}));
+//flash-connect middleware
+app.use(flash());
+
+//local variables using middileware
+app.use((req,res, next) => {
+    res.locals.success_message = req.flash('success_message');
+    next();
+});
+
 
 //load routes
 const home   = require('./routes/home/index');

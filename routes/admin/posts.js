@@ -6,6 +6,7 @@ const fs = require('fs');
 
 
 
+
 router.all("/*", (req, res, next)=>{
     req.app.locals.layout = 'admin';
     next();
@@ -65,6 +66,7 @@ router.post('/create', (req, res) => {
         });
     
         newPost.save().then(savedPost => {
+            req.flash('success_message', 'Post was created successfully: ' + savedPost.title);
             res.redirect('/admin/posts');
             console.log(savedPost)
         }).catch(err => {
@@ -99,7 +101,22 @@ router.put('/edit/:id', (req, res) => {
         post.allowComments = allowComments;
         post.body = req.body.body;
 
+        //TODO: old image stays in uploads folder, need to delete it then update the new image.
+        if(!isEmpty(req.files)){
+            let file = req.files.file;
+            filename = Date.now() + '-' + file.name;
+            post.file = filename;
+        
+            //move the file
+            file.mv('./public/uploads/' + filename, (err) => {
+                if(err) throw err;
+            });
+        }
+
         post.save().then(updatedPost => {
+
+            req.flash('success_message', 'Post was updated');
+
             res.redirect('/admin/posts');
         }).catch(err => console.log('could not update', err));
     });
@@ -112,6 +129,7 @@ router.delete('/:id', (req, res) => {
             
             fs.unlink(uploadDir + post.file, (err) => {
                 post.remove();
+                req.flash('success_message', 'Post was DELETED');            
                 res.redirect('/admin/posts');    
             });
         });

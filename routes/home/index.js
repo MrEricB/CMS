@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const Post = require('../../models/Posts')
 
 
 router.all('/*', (req, res, next)=>{
@@ -10,7 +10,13 @@ router.all('/*', (req, res, next)=>{
 
 //these are going into views/home/*.handlebars
 router.get('/', (req, res) => {
-    res.render('home/index');
+
+    //get all the post
+    Post.find({}).then(posts => {
+    res.render('home/index', {posts: posts});
+        
+    });
+
 });
 
 router.get('/about', (req, res) => {
@@ -24,5 +30,12 @@ router.get('/login', (req, res) => {
 router.get('/register', (req, res) => {
     res.render('home/register');
 });
+
+router.get('/posts/:id', (req, res) => {
+    Post.findOne({_id: req.params.id}).then( post => {
+        res.render('home/post', {post: post});
+    });
+});
+
 
 module.exports = router;
