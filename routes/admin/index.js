@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../../models/Posts');
 const faker = require('faker');
+const {userAuthenticated} = require('../../helpers/authentication');
 
 
 //override default layout set in app.js i.e. the home layout
+//TODO: add useAuthenitcted to all admin routes
 router.all('/*', (req, res, next)=>{
     req.app.locals.layout = 'admin';
     next();

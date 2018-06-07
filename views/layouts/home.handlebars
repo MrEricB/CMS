@@ -29,6 +29,17 @@
     <!-- Page Content -->
     <div class="container">
 
+      {{!-- dispaly errors --}}
+      {{#if errors}}
+        {{#each errors}}
+          <div class="alert alert-danger">
+            {{message}}
+          </div>
+        {{/each}}
+      {{/if}}
+
+      {{!-- FIXME: spacing between form-msg and upper nav bar is too close --}}
+      {{> home/form-msg}} 
       {{!-- dynamic data for each route --}}
       {{{body}}} 
 
