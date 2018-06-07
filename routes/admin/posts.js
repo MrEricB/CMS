@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../../models/Posts');
+const Category = require('../../models/Category');
 const {isEmpty, uploadDir} = require('../../helpers/upload-helper');
 const fs = require('fs');
 
@@ -15,13 +16,19 @@ router.all("/*", (req, res, next)=>{
 // /admin/posts by default
 router.get('/', (req, res) => {
     //pull data from database
-    Post.find({}).then(posts => {
+    Post.find({})
+    .populate('category')
+    .then(posts => {
         res.render('admin/posts', {posts: posts});
     });
 });
 
 router.get('/create', (req, res) => {
-    res.render('admin/posts/create');
+
+    Category.find({}).then(categories => {
+        res.render('admin/posts/create', {categories: categories});                
+    });
+
 });
 
 router.post('/create', (req, res) => {
@@ -62,7 +69,8 @@ router.post('/create', (req, res) => {
             status: req.body.status,
             allowComments: allowComments,
             body: req.body.body,
-            file: filename
+            file: filename,
+            category: req.body.category //saved in value="{{id}}" in create.handlebars
         });
     
         newPost.save().then(savedPost => {
@@ -73,14 +81,18 @@ router.post('/create', (req, res) => {
             console.log('could not save post', err);
         });
     }
-
-
 });
+
+
+
+
 
 router.get('/edit/:id', (req, res) => {
     //query the specific post and pass to res.render
     Post.findOne({_id: req.params.id}).then(post => {
-        res.render('admin/posts/edit', {post: post});    
+        Category.find({}).then(categories => {
+            res.render('admin/posts/edit', {post: post, categories: categories});    
+        });
     });
     
 });
@@ -100,6 +112,7 @@ router.put('/edit/:id', (req, res) => {
         post.status = req.body.status;
         post.allowComments = allowComments;
         post.body = req.body.body;
+        post.category = req.body.category;
 
         //TODO: old image stays in uploads folder, need to delete it then update the new image.
         if(!isEmpty(req.files)){

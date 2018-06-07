@@ -1,0 +1,45 @@
+
+<div class="row"> {{!-- Remove this row div to stack the creat and categories instead of side by side --}}
+    <div class="col-sm-4">
+        <h2>Create Category</h2>
+        
+        <form action="/admin/categories/create" method="post">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" placeholder="Enter Category" class="form-control">
+            </div>
+            <button class="btn btn-primary">Create Category</button>
+        </form>
+    </div>
+
+    {{!-- <br> only need if have them stacked--}}
+
+    <div class="col-sm-8">
+        <h2>Categories</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th >id</th>
+                    <th >Name</th>
+                    {{!-- <th></th> --}}
+                </tr>
+            </thead>
+            <tbody>
+                {{#each categories}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{name}}</td>
+                    <td><a href="/admin/categories/edit/{{id}}" class="btn btn-info">Edit</a></td>
+                    <td>
+                        <form action="/admin/categories/{{id}}?_method=DELETE" method="post">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+    </div>
+</div>

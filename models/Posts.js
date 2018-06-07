@@ -29,7 +29,13 @@ const PostSchema = new Schema({
     date: {
         type: Date,
         default: Date.now()
+    },
+    category: {
+        // accepts type of _id from categories
+        type: Schema.Types.ObjectId,
+        ref: 'categories'
     }
 });
+
 module.exports = mongoose.model('posts', PostSchema);
 

@@ -7,6 +7,7 @@
             <th>Image</th>
             <th>Title</th>
             <th>Status</th>
+            <th>Category</th>
             <th>Allow Comments</th>
             <th>Date</th>
         </tr>
@@ -18,6 +19,7 @@
             <td><img src="/uploads/{{file}}" alt="uploaded image" class="" height="50"></td>
             <td>{{title}}</td>
             <td>{{status}}</td>
+            <td>{{category.name}}</td>
             <td>{{allowComments}}</td>
             <td>{{generateDate date}}</td>
             <td><a href="/admin/posts/edit/{{id}}" class="btn btn-info">Edit</a></td>
