@@ -154,8 +154,8 @@ router.post('/register', (req, res) => {
 
 
 // API: display individual blog post
-router.get('/posts/:id', (req, res) => {
-    Post.findOne({_id: req.params.id})
+router.get('/posts/:slug', (req, res) => {
+    Post.findOne({slug: req.params.slug})
     .populate({path: 'comments', match:{approveComment: true}, populate: {path: 'user', model: 'users'}})
     .populate('user')
     .then( post => {

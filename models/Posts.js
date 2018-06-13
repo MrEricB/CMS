@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const URLSlug = require('mongoose-url-slugs');
 
 const Schema = mongoose.Schema;
 
@@ -11,6 +12,10 @@ const PostSchema = new Schema({
     title: {
         type: String,
         required: true
+    },
+    
+    slug: {
+        type: String
     },
 
     status: {
@@ -42,7 +47,9 @@ const PostSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'comments'
     }]
-}); //prof has },{usePushEach: ture}); don't think i need with my version of mongoose, prof is using 4.x me 5.x
+});
+
+PostSchema.plugin(URLSlug('title', {field: 'slug'}));
 
 module.exports = mongoose.model('posts', PostSchema);
 

@@ -89,15 +89,12 @@ router.post('/create', (req, res) => {
         newPost.save().then(savedPost => {
             req.flash('success_message', 'Post was created successfully: ' + savedPost.title);
             res.redirect('/admin/posts');
-            console.log(savedPost)
+            // console.log(savedPost)
         }).catch(err => {
             console.log('could not save post', err);
         });
     }
 });
-
-
-
 
 
 router.get('/edit/:id', (req, res) => {
@@ -109,6 +106,7 @@ router.get('/edit/:id', (req, res) => {
     });
     
 });
+
 
 //TODO: change to findAndUpdate
 router.put('/edit/:id', (req, res) => {
@@ -140,7 +138,6 @@ router.put('/edit/:id', (req, res) => {
         }
 
         post.save().then(updatedPost => {
-
             req.flash('success_message', 'Post was updated');
 
             res.redirect('/admin/posts/my-posts');
@@ -165,7 +162,7 @@ router.delete('/:id', (req, res) => {
 
                 post.remove().then(postRemoved => {}); // not using the returned prommise
                 req.flash('success_message', 'Post was DELETED');            
-                res.redirect('/admin/posts/my-post');    
+                res.redirect('/admin/posts/my-posts');    
             });
         });
 });

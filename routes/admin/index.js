@@ -38,6 +38,7 @@ router.post('/generate-fake-posts', (req, res) => {
         post.status = 'public';
         post.allowComments = faker.random.boolean();
         post.body = faker.lorem.paragraph();
+        post.slug = faker.random.word();
 
         post.save().then(newPost => {
         });

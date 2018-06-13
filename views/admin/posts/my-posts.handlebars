@@ -22,7 +22,7 @@
             <td>{{category.name}}</td>
             <td>{{allowComments}}</td>
             <td>{{generateDate date}}</td>
-            <td><a href="/posts/{{id}}" class="btn btn-info">View</a></td>
+            <td><a href="/posts/{{slug}}" class="btn btn-info">View</a></td>
             <td><a href="/admin/posts/edit/{{id}}" class="btn btn-primary">Edit</a></td>
             <td>
                 <form action="/admin/posts/{{id}}?_method=DELETE" method="post">
