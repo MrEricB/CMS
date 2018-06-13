@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../../models/Posts');
+const Comment = require('../../models/Comment');
 const faker = require('faker');
 const {userAuthenticated} = require('../../helpers/authentication');
 
@@ -16,7 +17,13 @@ router.all('/*', (req, res, next)=>{
 //don't need '/admin' because of midleware app.use('/admin', ...) is already telling it to add /admin
 //this is going into views/admin/index.handlebars
 router.get('/', (req, res) => {
-    res.render('admin/index');
+    Post.count().then(postCount => {
+        Comment.count().then(commentCount => {
+            Comment.count({user: req.user}).then(userCommentCount => { //userComment not working fix this
+                res.render('admin/index', {postCount: postCount, commentCount: commentCount, userCommentCount: userCommentCount});
+            });
+        });
+    });
 });
 
 //TEMPARARY ROUTE to generate fake data for testing

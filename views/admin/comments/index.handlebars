@@ -1,0 +1,28 @@
+<h1>Comments</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Owener</th>
+      <th>Date</th>
+      <th>Approve Commnet</th>
+    </tr>
+  </thead>
+  <tbody>
+      {{#each comments}}
+        <tr>
+        <td>{{id}}</th>
+        <td>{{user.firstName}}</td>
+        <td>{{generateDate date}}</td>
+        <td><input type="checkbox" name="approveComment" {{#if approveComment}} checked {{/if}} data-id="{{id}}"></td>
+        <td>
+            <form action="/admin/comments/{{id}}?_method=DELETE" method="post">
+                <button class="btn btn-danger">Delete</button>
+            </form>
+        </td>
+
+
+        </tr>
+      {{/each}}
+  </tbody>
+</table>

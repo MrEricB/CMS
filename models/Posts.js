@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
 
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    },
     title: {
         type: String,
         required: true
@@ -31,11 +35,14 @@ const PostSchema = new Schema({
         default: Date.now()
     },
     category: {
-        // accepts type of _id from categories
         type: Schema.Types.ObjectId,
         ref: 'categories'
-    }
-});
+    },
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: 'comments'
+    }]
+}); //prof has },{usePushEach: ture}); don't think i need with my version of mongoose, prof is using 4.x me 5.x
 
 module.exports = mongoose.model('posts', PostSchema);
 

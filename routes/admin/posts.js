@@ -23,6 +23,18 @@ router.get('/', (req, res) => {
     });
 });
 
+//API: get logged in users posts
+router.get('/my-posts', (req, res) =>{
+    Post.find({user: req.user.id})
+    .populate('category')
+    .then(posts => {
+        res.render('admin/posts/my-posts', {posts: posts});
+    });
+
+
+});
+
+
 router.get('/create', (req, res) => {
 
     Category.find({}).then(categories => {
@@ -65,6 +77,7 @@ router.post('/create', (req, res) => {
         if(!req.body.allowComments){allowComments = false}
     
         const newPost = new Post({
+            user: req.user.id,
             title: req.body.title,
             status: req.body.status,
             allowComments: allowComments,
@@ -107,7 +120,7 @@ router.put('/edit/:id', (req, res) => {
         } else {
             allowComments = false;
         }
-
+        post.user = req.user.id;
         post.title = req.body.title;
         post.status = req.body.status;
         post.allowComments = allowComments;
@@ -130,7 +143,7 @@ router.put('/edit/:id', (req, res) => {
 
             req.flash('success_message', 'Post was updated');
 
-            res.redirect('/admin/posts');
+            res.redirect('/admin/posts/my-posts');
         }).catch(err => console.log('could not update', err));
     });
 });
@@ -138,12 +151,21 @@ router.put('/edit/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     
     Post.findOne({_id: req.params.id})
+        .populate('comments')
         .then(post => {
             
             fs.unlink(uploadDir + post.file, (err) => {
-                post.remove();
+
+                //remove the comments too
+                if(!post.comments.length < 1){
+                    post.comments.forEach(comment => {
+                        comment.remove().then(removedComment => {}); //not using the returned promise
+                    });
+                }
+
+                post.remove().then(postRemoved => {}); // not using the returned prommise
                 req.flash('success_message', 'Post was DELETED');            
-                res.redirect('/admin/posts');    
+                res.redirect('/admin/posts/my-post');    
             });
         });
 });
