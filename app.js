@@ -87,5 +87,5 @@ app.use('/admin/comments', comments); //TODO: maybe not have comments part of ad
 
 const port = process.env.PORT || 3000;
 app.listen(port, ()=>{
-    console.log(`Server up on PORT: ${PORT}`);
+    console.log(`Server up on PORT: ${port}`);
 });
